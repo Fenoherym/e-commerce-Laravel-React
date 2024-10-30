@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Cart\CartController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PayementController;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Inertia\Inertia;
@@ -18,8 +19,14 @@ Route::get('/', function () {
     ]);
 });
 
+
+
 Route::get('/product', [ProductController::class, 'index'])->name('shop');
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
+
+Route::post('/comment', [CommentController::class,'store'])->name('post_comment');
+Route::get('/comment', [CommentController::class,'index'])->name('get_comment');
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/checkout', [PayementController::class,'checkout'])->name('payment.index');
@@ -30,9 +37,7 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/panel', [CartController::class, 'index'])->name('cart.index');
 Route::get('/panel/delete/{rowId}', [CartController::class, 'remove'])->name('cart.remove');
 
-Route::get('/destroy-cart', function() {
-    Cart::destroy();
-});
+
 
 Route::prefix('api')->group(function () {
     Route::get('/shop', [ProductController::class, 'search'])->name('api.shop');
