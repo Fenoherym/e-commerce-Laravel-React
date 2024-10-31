@@ -3,6 +3,7 @@ import ProductCard from "@/Components/partials/ProductCard";
 import { Link, router } from "@inertiajs/react";
 import Master from '@/Layouts/Master';
 import { SearchContext } from '@/Context/SearchProvider';
+import Pagination from '@/Components/partials/Pagination';
 
 
 /**
@@ -15,23 +16,6 @@ export default function Shop({ initialProducts, categories }) {
        
 
     const {handleSubCategoryChange, selectedSubCategories} = useContext(SearchContext)
-
-
-    /**
-     * Rendu de la pagination
-     */
-    const renderPagination = () => (
-        <div className="mt-8 flex justify-center">
-            {initialProducts.links.map((link, index) => (
-                <Link
-                    key={index}
-                    href={link.url}
-                    className={`px-4 py-2 mx-1 rounded ${link.active ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-                    dangerouslySetInnerHTML={{ __html: link.label }}
-                />
-            ))}
-        </div>
-    );
 
     /**
      * Rendu du contenu principal (produits ou message si aucun produit)
@@ -80,7 +64,10 @@ export default function Shop({ initialProducts, categories }) {
                 </div>
                 <div className="w-full md:w-3/4">
                     {renderContent()}
-                    {initialProducts.data && initialProducts.data.length > 0 && renderPagination()}
+                    {
+                        initialProducts.data && initialProducts.data.length > 0 && 
+                        <Pagination data={initialProducts} />
+                    }
                 </div>
             </section>
         </ Master>

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import Master from "@/Layouts/Master";
 import { changeCountValue } from "@/features/counter";
@@ -10,20 +9,22 @@ import { addToCart } from "@/services/cartService";
 import CommentForm from "@/Components/partials/Comment/CommentForm";
 import Comment from "@/Components/partials/Comment/Comment";
 import RatingDisplay from "@/Components/partials/RatingDisplay";
+import Pagination from "@/Components/partials/Pagination";
 
 
 /**
  * Composant Show qui affiche les détails d'un produit.
  * @param {Object} product - L'objet produit à afficher.
  */
-export default function Show({ product }) {
+export default function Show({ product, auth }) {
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [quantity, setQuantity] = useState(1);
     const [showTotalPrice, setShowTotalPrice] = useState(false);
     const [commentRating, setCommentRating] = useState(0)
     const [ratingHover, setRatingHover] = useState(-1)
-    const [comments, setComments] = useState([])
+    const [comments, setComments] = useState({})
+
 
     const [commentMsg, setCommentMsg] = useState({
         product_id: product.id,
@@ -36,14 +37,32 @@ export default function Show({ product }) {
 
     const dispatch = useDispatch()
 
+    
+
+
+    async function fetchComment(product_id, url=null) {
+        console.log(url)
+        try {
+            const response = await getComment(product_id, url);
+            console.log(response)
+            setComments(response.data.comments);
+        } catch (error) {
+            console.error('Erreur lors du chargement des commentaires:', error);
+        }
+    }
+
+    const handlePageChange = (url) => {
+        fetchComment(product.id, url);
+    };
 
     useEffect(() => {
-        fetchComment()
-    }, [])
+        fetchComment(product.id);
+        if(auth.user) {
+            setCommentMsg({...commentMsg, name: auth.user.name, email: auth.user.email});
+        }
+    }, []);
 
-    async function fetchComment() {
-        setComments((await getComment()).data.comments.data)
-    }
+
 
     /**
      * Fonction pour incrémenter la quantité du produit.
@@ -110,10 +129,10 @@ export default function Show({ product }) {
             <div className="px-10">
                 <div className="flex items-center font-bold text-gray-500">
                     <div className="flex-grow border-t border-gray-300"></div>
-                    <span className="mx-4">Commentaire</span>
+                    <span className="mx-4">Commentaires ({comments?.total || 0})</span>
                     <div className="flex-grow border-t border-gray-300"></div>
                 </div>
-                <div className="flex justify-between gap">
+                <div className="flex justify-between">
                     <div className="flex-[1] p-4">
                         <div className="flex items-center font-bold gap-2 text-xl mb-5">
                             <span className="text-2xl">4.5</span>
@@ -124,9 +143,19 @@ export default function Show({ product }) {
                         </div>
                     </div>
                     <div className="flex-[2] p-4">
-                        {comments.map((comment) => (
+                        {comments?.total !== 0 ? comments?.data?.map((comment) => (
                             <Comment key={comment.id} comment={comment} />
-                        ))}
+                        )) : (
+                            <div className="flex justify-center text-gray-600 text-sm">
+                                Aucun commentaire sur ce produit
+                            </div>
+                        )}
+                        {comments?.data?.length > 0 && 
+                        <Pagination 
+                            isAjax={true}
+                            data={comments} 
+                            onPageChange={handlePageChange}
+                        />}
                     </div>
                     <div className="flex-[1] p-4">
                         <CommentForm 

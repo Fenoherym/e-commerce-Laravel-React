@@ -16,10 +16,15 @@ export async function sendComment(commentMsg) {
     }
 } 
 
-export async function getComment() {
+export async function getComment(product_id, url) {
     try {
-        const response = await axios.get('/comment');          
-        return response;
+        if(url) {
+            const response = await axios.get(url);     
+            return response;
+        } else {
+            const response = await axios.get(`/comment/${product_id}`);     
+            return response;
+        }
 
     } catch (err) {
         throw err;

@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 class CommentController extends Controller
 {
 
-    public function index() {
-        $comments = Comment::latest()->paginate(10);
+    public function index($product_id) {
+        $comments = Comment::where("product_id", $product_id)->latest()->paginate(5);
 
         return response()->json([
             "comments" => $comments

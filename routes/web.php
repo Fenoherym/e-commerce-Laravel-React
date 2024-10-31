@@ -25,7 +25,7 @@ Route::get('/product', [ProductController::class, 'index'])->name('shop');
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
 
 Route::post('/comment', [CommentController::class,'store'])->name('post_comment');
-Route::get('/comment', [CommentController::class,'index'])->name('get_comment');
+Route::get('/comment/{product_id}', [CommentController::class,'index'])->name('get_comment');
 
 
 Route::middleware(['auth'])->group(function () {

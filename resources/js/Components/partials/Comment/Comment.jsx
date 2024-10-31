@@ -4,10 +4,10 @@ import { formatDateRelative } from '@/utils'
 
 export default function Comment({ comment }) {
     return (
-        <div className="flex items-center">
+        <div className="flex">
             <div className="w-1/3">
                 <h2 className='font-bold'>{comment.name}</h2>
-                <span className='text-xs text-gray-500 my-2 mb-2'>{formatDateRelative(comment.created_at)}</span>
+                <span className='text-xs text-gray-500 mb-2'>{formatDateRelative(comment.created_at)}</span>
                 <div className='text-xs'>
                     <RatingDisplay />
                 </div>

@@ -6,27 +6,31 @@ export default function CommentForm({handleSendComment, setCommentMsg,commentMsg
                     onChange={(e) => setCommentMsg({ ...commentMsg, name: e.target.value })}
                     value={commentMsg.name}
                     type="text"
-                    className="w-full rounded-md"
+                    className="w-full rounded-md text-sm"
                     placeholder="VOTRE NOM"
+                    required
                 />
-                {/* <span className="text-red-400 text-xs">Champ obligatoire</span> */}
+                {/* <span className="text-red-400 text-xs">Champ obligatoire</span> */} 
             </div>
             <div className="mb-4">
                 <input
                     onChange={(e) => setCommentMsg({ ...commentMsg, email: e.target.value })}
                     type="email"
                     value={commentMsg.email}
-                    className="w-full rounded-md"
+                    className="w-full rounded-md text-sm"
                     placeholder="VOTRE PRENOM"
+                    required
                 />
             </div>
             <div className="mb-4">
 
                 <textarea
                     onChange={(e) => setCommentMsg({ ...commentMsg, content: e.target.value })}
-                    className="w-full rounded-md"
+                    className="w-full rounded-md text-sm"
                     value={commentMsg.content}
-                    placeholder="VOTRE MESSAGE"></textarea>
+                    placeholder="VOTRE MESSAGE"
+                    required
+                    ></textarea>
             </div>
 
             <div
